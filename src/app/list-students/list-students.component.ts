@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { StudentService } from "../shared/services/student.service";
 import { Student } from "../shared/models/student";
+import { TranslateService } from "@ngx-translate/core";
 import Swal from "sweetalert2";
 @Component({
   selector: "app-list-students",
@@ -8,7 +9,29 @@ import Swal from "sweetalert2";
   styleUrls: ["./list-students.component.css"],
 })
 export class ListStudentsComponent implements OnInit {
-  constructor(private studentService: StudentService) {}
+  title = "Liste des étudiants";
+  label = "changer la langue";
+  cols = [
+    "Nom",
+    "Prénom",
+    "Email",
+    "Mot de passe",
+    "Age",
+    "Téléphone",
+    "Action",
+  ];
+  Delete = "Supprimer";
+  Edit = "Modifier";
+  constructor(
+    private studentService: StudentService,
+    public translate: TranslateService
+  ) {
+    translate.addLangs(["en", "fr"]);
+    translate.setDefaultLang("en");
+
+    const browserLang = translate.getBrowserLang();
+    translate.use(browserLang.match(/en|fr/) ? browserLang : "en");
+  }
   students: Student[];
 
   ngOnInit(): void {

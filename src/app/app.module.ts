@@ -12,7 +12,15 @@ import { StudentService } from "./shared/services/student.service";
 import { ListStudentsComponent } from "./list-students/list-students.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
+import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+
+// AoT requires an exported function for factories
+export function HttpLoaderFactory(httpClient: HttpClient) {
+  return new TranslateHttpLoader(httpClient);
+}
 import { ToastrModule } from "ngx-toastr";
+import { HttpClient } from '@angular/common/http';
 const routes: Routes = [
   { path: "add-student", component: AddStudentComponent },
   { path: "all-student", component: ListStudentsComponent },
@@ -30,6 +38,9 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    TranslateModule.forRoot({
+      defaultLanguage: "en",
+    }),
     ToastrModule.forRoot(),
   ],
   providers: [StudentService],
