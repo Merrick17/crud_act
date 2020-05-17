@@ -13,6 +13,7 @@ export class AddStudentComponent implements OnInit {
   public student = new Student();
   addForm: FormGroup;
   registerForm: FormGroup;
+  submitted: boolean = false;
   constructor(
     private studentService: StudentService,
     private route: ActivatedRoute,
@@ -41,25 +42,29 @@ export class AddStudentComponent implements OnInit {
     });
   }
   save() {
-    this.student.firstName = this.registerForm.controls["firstname"].value;
-    this.student.lastName = this.registerForm.controls["lastname"].value;
-    this.student.age = this.registerForm.controls["age"].value;
-    this.student.email = this.registerForm.controls["email"].value;
-    this.student.password=this.registerForm.controls["password"].value;
+    this.submitted = true;
+    if (this.submitted == true && this.registerForm.valid) {
+      this.student.firstName = this.registerForm.controls["firstname"].value;
+      this.student.lastName = this.registerForm.controls["lastname"].value;
+      this.student.age = this.registerForm.controls["age"].value;
+      this.student.email = this.registerForm.controls["email"].value;
+      this.student.password = this.registerForm.controls["password"].value;
 
-    if (!this.student.id) {
-      this.studentService.AddStudent({ ...this.student });
-      this.toastr.success("Success", "Utilisateur Ajouté!", {
-        timeOut: 3000,
-      });
-    } else {
-      this.studentService.updateStudent({ ...this.student });
-      this.toastr.success("Success", "Utilisateur Modifier !", {
-        timeOut: 3000,
-      });
+      if (!this.student.id) {
+        this.studentService.AddStudent({ ...this.student });
+        this.toastr.success("Success", "Utilisateur Ajouté!", {
+          timeOut: 3000,
+        });
+      } else {
+        this.studentService.updateStudent({ ...this.student });
+        this.toastr.success("Success", "Utilisateur Modifier !", {
+          timeOut: 3000,
+        });
+      }
+
+      this.registerForm.reset();
+      this.submitted = false;
     }
-
-    this.registerForm.reset();
   }
   getStudent(id: string) {
     this.studentService.getStudent(id).subscribe((res) => {
